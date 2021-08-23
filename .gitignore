@@ -1,0 +1,10 @@
+__pycache__
+src/*
+
+# Select the files u would like to push
+*.py
+*.ipynb
+
+!common.py
+!preprocessor.py
+!main.ipynb
