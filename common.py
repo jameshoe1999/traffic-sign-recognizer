@@ -3,10 +3,12 @@ import os
 import numpy as np
 import random
 
-def load_data(dir: str, limit: int) -> tuple[np.ndarray, list[str]]:
+def load_data(dir: str, limit: int = 0) -> tuple[np.ndarray, list[str]]:
     raws: list[np.ndarray] = []
     labels: list[str] = []
     files = os.listdir(dir)
+    if limit in [0, None]:
+        limit = len(files)
     count = 0
     for name in files:
         if (name.endswith('.ppm')):
