@@ -2,6 +2,7 @@ import cv2 as cv
 import os
 import numpy as np
 import random
+import preprocessor as pp
 
 def load_data(dir: str, limit: int = 0) -> tuple[np.ndarray, list[str]]:
     raws: list[np.ndarray] = []
@@ -31,6 +32,16 @@ def read_image(filepath: str) -> np.ndarray:
         img = cv.resize(img, (75, 75))
         img = np.uint8(img)
         return img
+    return None
+
+def preprocess_image(img: np.ndarray):
+    normalized = pp.hist_normalize(img)
+    houghed = pp.hough_circling(normalized)
+    if houghed is not None:
+        hog_img = pp.hog_descriptor(houghed)
+        result: np.ndarray = np.array(hog_img)
+        result = result.reshape(*result.shape, 1)
+        return result
     return None
 
 def files_rename(dir: str):
