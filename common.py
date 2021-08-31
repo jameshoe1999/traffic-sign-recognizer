@@ -19,7 +19,8 @@ def load_data(dir: str, limit: int = 0) -> tuple[np.ndarray, list[str]]:
                 raws.append(img)
                 # filename convention: ..._50.ppm
                 # where between -6 and -4 is the label
-                labels.append(str(name[-6:-4]))
+                separator = name.find('_') + 1
+                labels.append(str(name[separator:-4]))
                 count += 1
                 if (count >= limit):
                     break
@@ -49,11 +50,12 @@ def files_rename(dir: str):
     filepath = os.path.join(dir) + os.sep
     for file in files:
         if (file.endswith(".ppm") and file[2] == '_'): # only rename file start with "XX_....ppm"
-            speed = file[:2]
+            separator = file.find('_')
+            label = file[:separator]
             while (True): # continue renaming until no duplicate filename
                 try:
                     ram = random.randint(1, 99999)
-                    new_filename = "%s_%s.ppm" % (str(ram).rjust(5, "0"), speed)
+                    new_filename = "%s_%s.ppm" % (str(ram).rjust(5, "0"), label)
                     os.rename(filepath + file, filepath + new_filename)
                     break
                 except WindowsError:
