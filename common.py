@@ -49,8 +49,8 @@ def files_rename(dir: str):
     files = os.listdir(dir)
     filepath = os.path.join(dir) + os.sep
     for file in files:
-        if (file.endswith(".ppm") and file[2] == '_'): # only rename file start with "XX_....ppm"
-            separator = file.find('_')
+        separator = file.find('_')
+        if (file.endswith(".ppm") and separator != -1 and separator < 5): # only rename file start with "XX_....ppm"
             label = file[:separator]
             while (True): # continue renaming until no duplicate filename
                 try:
