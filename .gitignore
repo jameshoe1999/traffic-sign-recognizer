@@ -1,5 +1,6 @@
 __pycache__
 src/*
+saved_models/*
 
 # Select the files u would like to push
 *.py
