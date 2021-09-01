@@ -7,4 +7,5 @@ src/*
 
 !common.py
 !preprocessor.py
+!parallel.py
 !main.ipynb

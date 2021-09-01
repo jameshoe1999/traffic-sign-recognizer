@@ -3,6 +3,26 @@ import os
 import numpy as np
 import random
 import preprocessor as pp
+from tensorflow.keras.utils import to_categorical
+
+def load_preprocess(dir: str, limit: int = 0) -> tuple[np.ndarray, list[str]]: 
+    data, label = load_data(dir, limit)
+    X = []
+    Y = []
+    for (index, image) in enumerate(data):
+        result = preprocess_image(image)
+        if (result is None):
+            continue
+        X.append(result)
+        Y.append(label[index])
+    X = np.array(X)
+    return X, Y
+
+def mask_label(label: list[str]) -> np.ndarray:
+    types = {'NE': 0, 'TC': 1, 'TK': 2, '80': 3, 'SP': 4, 'TR': 5}
+    Y = np.fromiter([types[y] for y in label], dtype=np.int)
+    Y = to_categorical(Y)
+    return Y, types
 
 def load_data(dir: str, limit: int = 0) -> tuple[np.ndarray, list[str]]:
     raws: list[np.ndarray] = []
