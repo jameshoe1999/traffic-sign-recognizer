@@ -1,6 +1,5 @@
 from multiprocessing import cpu_count, Pool
 from multiprocessing.pool import AsyncResult
-from re import L
 import common as cm
 import numpy as np
 
