@@ -9,4 +9,5 @@ saved_models/*
 !common.py
 !preprocessor.py
 !parallel.py
+!predictor.ipynb
 !main.ipynb
