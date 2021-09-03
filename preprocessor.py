@@ -33,18 +33,11 @@ def sharpening(img: np.ndarray) -> np.ndarray:
     denoise_img = restoration.richardson_lucy(conved, psf, 15, clip=False)
     return np.uint8(denoise_img)
 
-def canny_edge_threshold(img: np.ndarray) -> tuple[np.ndarray, float]:
-    threshold1 = 200
-    threshold2 = 45
-    edges = cv.Canny(img, threshold1, threshold2)
-    contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
-    max_contour = max(contours, key=cv.contourArea)
-    mask = np.zeros(img.shape[:2], dtype=np.uint8)
-    cv.drawContours(mask, [max_contour], -1, (255, 255, 255), cv.FILLED)
-    masked_img = cv.bitwise_and(img, img, mask=mask)
-    non_zero = cv.countNonZero(mask)
-    area = non_zero / mul(*img.shape[:2])
-    return masked_img, area
+def thresholding(img: np.ndarray) -> tuple[np.ndarray, float]:
+    thresh = 127
+    maxval = 255
+    _, edges = cv.threshold(img, thresh, maxval, cv.THRESH_OTSU)
+    return edges
 
 def hog_descriptor(img: np.ndarray) -> np.ndarray:
     resized_img = resize(img, (128*4, 64*4))
