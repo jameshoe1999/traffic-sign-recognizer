@@ -26,12 +26,17 @@ def color_filter(img: np.ndarray) -> np.ndarray:
     return img
 
 def sharpening(img: np.ndarray) -> np.ndarray:
-    if len(img.shape) > 2:
-        img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    psf = np.ones((5, 5)) / 35
-    conved = conv2d(img, psf, 'same')
-    denoise_img = restoration.richardson_lucy(conved, psf, 15, clip=False)
-    return np.uint8(denoise_img)
+    psf = np.ones((5, 5)) / 45
+    channels = cv.split(img)
+    sharpen = []
+    for channel in channels:
+        conved: np.ndarray = conv2d(channel, psf, 'same')
+        conved += 0.1 * conved.std() * np.random.standard_normal(conved.shape)
+        denoise_img = restoration.richardson_lucy(conved, psf, 5, clip=False)
+        denoise_img = np.uint8(denoise_img)
+        sharpen.append(denoise_img)
+    sharpen = np.dstack(sharpen) / 255
+    return sharpen
 
 def thresholding(img: np.ndarray) -> tuple[np.ndarray, float]:
     thresh = 127
@@ -40,7 +45,7 @@ def thresholding(img: np.ndarray) -> tuple[np.ndarray, float]:
     return edges
 
 def hog_descriptor(img: np.ndarray) -> np.ndarray:
-    resized_img = resize(img, (128*4, 64*4))
+    resized_img = resize(img, (64*4, 64*4))
     _, hog_img = hog(resized_img, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(4, 4), visualize=True)
     return hog_img # feature descriptor
 
