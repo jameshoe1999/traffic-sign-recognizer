@@ -51,9 +51,10 @@ def hog_descriptor(img: np.ndarray) -> np.ndarray:
 
 def hough_circling(img: np.ndarray) -> np.ndarray:
     img_clone = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    thres, _ = cv.threshold(img_clone, 0, 255, cv.THRESH_OTSU)
     mask = np.zeros(img_clone.shape, dtype=np.uint8)
     width, _ = img_clone.shape
-    circles = cv.HoughCircles(img_clone, cv.HOUGH_GRADIENT_ALT, 1, width // 3, param1=300, param2=0.65)
+    circles = cv.HoughCircles(img_clone, cv.HOUGH_GRADIENT, 1, width//2, param1=thres, param2=10, minRadius=int(width//4), maxRadius=int(width//2.55))
     if circles is not None:
         circles = np.round(circles[0, :]).astype('int')
         x, y, r = max(circles, key=(lambda x: x[2]))
