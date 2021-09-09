@@ -62,8 +62,7 @@ def preprocess_image(img: np.ndarray):
     normalized = pp.hist_normalize(img)
     houghed = pp.hough_circling(normalized)
     if houghed is not None:
-        canny_edged = pp.thresholding(houghed)
-        hog_img = pp.hog_descriptor(canny_edged)
+        hog_img = pp.hog_descriptor(houghed)
         result: np.ndarray = np.array(hog_img)
         result = result.reshape(*result.shape, 1)
         return result
